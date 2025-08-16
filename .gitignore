@@ -1,0 +1,23 @@
+# Node modules (React)
+frontend/node_modules/
+backend/node_modules/
+
+# Build output
+frontend/dist/
+frontend/build/
+backend/__pycache__/
+*.pyc
+
+# Environment files (IMPORTANT: secrets stay out of GitHub)
+frontend/.env
+backend/.env
+.env
+frontend/.env.local
+
+# Logs
+*.log
+
+# IDE/editor junk
+.vscode/
+.idea/
+.DS_Store
