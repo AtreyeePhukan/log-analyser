@@ -34,12 +34,6 @@ from model import load_model, is_suspicious
 
 load_dotenv()
 
-# huggingface_token = os.getenv("HUGGINGFACE_TOKEN")
-# client = InferenceClient(
-#     model="gpt2", 
-#     token=huggingface_token
-# )
-
 model_bundle = joblib.load("models/supervised_tfidf_model_bundle.pkl")
 model = model_bundle["model"]
 vectorizer = model_bundle["vectorizer"]
@@ -50,7 +44,7 @@ active_connections = set()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
