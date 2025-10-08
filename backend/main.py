@@ -73,16 +73,6 @@ async def background_startup():
 async def root():
     return {"status": "Backend is running"}
 
-frontend_build_dir = os.path.join(os.path.dirname(__file__), "../frontend/dist")
-app.mount("/", StaticFiles(directory=frontend_build_dir, html=True), name="frontend")
-
-@app.get("/{full_path:path}")
-async def serve_react_app(full_path: str):
-    index_path = os.path.join(frontend_build_dir, "index.html")
-    if os.path.exists(index_path):
-        return FileResponse(index_path)
-    return {"error": "Frontend not built."}
-
 @app.post("/upload/")
 async def upload_logs(file: UploadFile):
     try:
