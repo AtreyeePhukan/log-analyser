@@ -35,7 +35,9 @@ from backend.model import load_model, is_suspicious
 
 load_dotenv()
 
-model_bundle = joblib.load("models/supervised_tfidf_model_bundle.pkl")
+MODEL_PATH = Path(__file__).parent / "models/supervised_tfidf_model_bundle.pkl"
+
+model_bundle = joblib.load(MODEL_PATH)
 model = model_bundle["model"]
 vectorizer = model_bundle["vectorizer"]
 
