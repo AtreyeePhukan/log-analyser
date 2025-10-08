@@ -49,7 +49,10 @@ active_connections = set()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+         "https://log-analyser-hto46k27a-atreyee-phukans-projects.vercel.app",
+        "http://localhost:5173",
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
