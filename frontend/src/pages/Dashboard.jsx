@@ -43,29 +43,37 @@ export default function Dashboard() {
   }, []);
 
   const handleFileUpload = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file);
 
-    const res = await fetch("http://localhost:8000/upload/", {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL.replace(/\/$/, "");
+
+  try {
+    const res = await fetch(`${backendUrl}/upload/`, {
       method: "POST",
       body: formData,
     });
 
-    if (res.ok) {
-      const json = await res.json();
-      setLogs(json.logs);
-      setLineData(json.lineData);
-      setBarData(json.barData);
-      setDonutData(json.donutData);
-      setDataLoaded(true);
-
-      localStorage.setItem("logs", JSON.stringify(json.logs));
-      localStorage.setItem("lineData", JSON.stringify(json.lineData));
-      localStorage.setItem("barData", JSON.stringify(json.barData));
-      localStorage.setItem("donutData", JSON.stringify(json.donutData));
-      localStorage.setItem("hasUploadedOnce", "true");
+    if (!res.ok) {
+      throw new Error(`Upload failed: ${res.status}`);
     }
-  };
+
+    const json = await res.json();
+    setLogs(json.logs);
+    setLineData(json.lineData);
+    setBarData(json.barData);
+    setDonutData(json.donutData);
+    setDataLoaded(true);
+
+    localStorage.setItem("logs", JSON.stringify(json.logs));
+    localStorage.setItem("lineData", JSON.stringify(json.lineData));
+    localStorage.setItem("barData", JSON.stringify(json.barData));
+    localStorage.setItem("donutData", JSON.stringify(json.donutData));
+    localStorage.setItem("hasUploadedOnce", "true");
+  } catch (error) {
+    console.error("Error uploading file:", error);
+  }
+};
 
   if (!hasAppInitialized) return null;
 
