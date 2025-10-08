@@ -5,7 +5,11 @@ export const useDashboardSocket = () => {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    const socket = new WebSocket(`${import.meta.env.VITE_BACKEND_URL.replace(/^http/, 'ws')}/ws/dashboard`);
+    let backendUrl = import.meta.env.VITE_BACKEND_URL.replace(/\/$/, ""); // remove trailing slash
+    // convert protocol
+    backendUrl = backendUrl.replace(/^http:/, "ws:").replace(/^https:/, "wss:");
+
+    const socket = new WebSocket(`${backendUrl}/ws/dashboard`);
 
     socket.onopen = () => {
       console.log("WebSocket connected from React");
@@ -39,4 +43,3 @@ export const useDashboardSocket = () => {
 
   return { data, connected };
 };
-
