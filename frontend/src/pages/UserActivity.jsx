@@ -2,20 +2,28 @@ import React, { useEffect, useState } from "react";
 
 const UserActivity = () => {
   const [logs, setLogs] = useState([]);
-  const anomalyThreshold = 5; // change if needed
+  const anomalyThreshold = 5;
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL.replace(/\/$/, "");
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/logs");
+    const wsUrl = backendUrl.replace(/^http:/, "ws:").replace(/^https:/, "wss:");
+    const ws = new WebSocket(`${wsUrl}/ws/logs`);
+
+    ws.onopen = () => console.log("✅ WebSocket connected: /ws/logs");
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      // normalize boolean in case backend sends "true"/"false" strings
       data.is_anomaly = data.is_anomaly === true || data.is_anomaly === "true";
       setLogs((prev) => [data, ...prev].slice(0, 20));
     };
 
+    ws.onerror = (err) => console.error("WebSocket error:", err);
+
+    ws.onclose = () => console.warn("WebSocket closed: /ws/logs");
+
     return () => ws.close();
-  }, []);
+  }, [backendUrl]);
 
   const totalEvents = logs.length;
   const uniqueIPs = [...new Set(logs.map((a) => a.ip_address))].length;
