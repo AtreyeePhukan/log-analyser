@@ -11,11 +11,14 @@ from io import StringIO
 import traceback
 from pathlib import Path
 import numpy as np
-from log_simulator_runner import log_simulation_loop,clients
-from predict_supervised import predict_log_vectorized
-from log_generator import generate_insights_log,generate_windows_style_logs
-from utils import logs_to_dataframe
-from database import (
+import os
+from pydantic import BaseModel
+from dotenv import load_dotenv
+from backend.log_simulator_runner import log_simulation_loop, clients
+from backend.predict_supervised import predict_log_vectorized
+from backend.log_generator import generate_insights_log, generate_windows_style_logs
+from backend.utils import logs_to_dataframe
+from backend.database import (
     create_logs_table,
     insert_log,
     get_table_data,
@@ -27,10 +30,8 @@ from database import (
     update_dashboard_metrics,
     get_latest_dashboard_metrics,
 )
-import os
-from pydantic import BaseModel
-from dotenv import load_dotenv
-from model import load_model, is_suspicious
+from backend.model import load_model, is_suspicious
+
 
 load_dotenv()
 
