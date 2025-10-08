@@ -35,7 +35,7 @@ from backend.model import load_model, is_suspicious
 
 load_dotenv()
 
-MODEL_PATH = Path(__file__).parent / "models/supervised_tfidf_model_bundle.pkl"
+MODEL_PATH = Path(__file__).parent / "models" / "supervised_tfidf_model_bundle.pkl".pkl"
 
 model_bundle = joblib.load(MODEL_PATH)
 model = model_bundle["model"]
