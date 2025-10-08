@@ -2,6 +2,8 @@ import joblib
 import pandas as pd
 from fastapi import FastAPI, UploadFile, WebSocket, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import asyncio
 from datetime import datetime, timedelta, timezone
 from collections import defaultdict, deque
@@ -66,6 +68,16 @@ async def startup():
 @app.get("/")
 async def root():
     return {"status": "Backend is running"}
+
+frontend_build_dir = os.path.join(os.path.dirname(__file__), "../frontend/build")
+app.mount("/static", StaticFiles(directory=os.path.join(frontend_build_dir, "static")), name="static")
+
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    index_path = os.path.join(frontend_build_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return {"error": "Frontend not built."}
 
 @app.post("/upload/")
 async def upload_logs(file: UploadFile):
