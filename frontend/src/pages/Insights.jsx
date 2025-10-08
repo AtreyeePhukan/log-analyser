@@ -9,11 +9,10 @@ export default function Insights() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
 
-  // ✅ Use your deployed backend URL from environment variables
+
   const backendUrl = import.meta.env.VITE_BACKEND_URL.replace(/\/$/, "");
 
   useEffect(() => {
-    // ✅ Replace http → ws and remove trailing slash
     const wsUrl = backendUrl.replace(/^http:/, "ws:").replace(/^https:/, "wss:");
     const ws = new WebSocket(`${wsUrl}/ws/insights`);
 
