@@ -63,6 +63,9 @@ async def startup():
     asyncio.create_task(log_simulation_loop())
     model = load_model()
 
+@app.get("/")
+async def root():
+    return {"status": "Backend is running"}
 
 @app.post("/upload/")
 async def upload_logs(file: UploadFile):
