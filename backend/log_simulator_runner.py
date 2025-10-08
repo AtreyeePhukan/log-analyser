@@ -1,5 +1,5 @@
 import asyncio
-from log_generator import generate_log_entry
+from backend.log_generator import generate_log_entry
 
 clients = set()
 
