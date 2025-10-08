@@ -2,7 +2,7 @@ import joblib
 import pandas as pd
 from pathlib import Path
 
-MODEL_PATH = Path("models/suspicious_ip_model.pkl")  
+MODEL_PATH = Path(__file__).parent / "models/suspicious_ip_model.pkl"  
 
 def load_model():
     if not MODEL_PATH.exists():
