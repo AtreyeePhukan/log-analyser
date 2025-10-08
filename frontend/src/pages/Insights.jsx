@@ -9,8 +9,13 @@ export default function Insights() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
 
+  // ✅ Use your deployed backend URL from environment variables
+  const backendUrl = import.meta.env.VITE_BACKEND_URL.replace(/\/$/, "");
+
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/insights");
+    // ✅ Replace http → ws and remove trailing slash
+    const wsUrl = backendUrl.replace(/^http:/, "ws:").replace(/^https:/, "wss:");
+    const ws = new WebSocket(`${wsUrl}/ws/insights`);
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -19,51 +24,63 @@ export default function Insights() {
       }
     };
 
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+    };
+
     return () => ws.close();
-  }, []);
+  }, [backendUrl]);
 
   const handleBlockIP = async (ip) => {
-    await fetch(`http://localhost:8000/block_ip/${ip}`, { method: "POST" });
-    // alert(`IP ${ip} blocked.`);
-    setToast(`IP ${ip} blocked.`);
+    try {
+      await fetch(`${backendUrl}/block_ip/${ip}`, { method: "POST" });
+      setToast(`IP ${ip} blocked.`);
+    } catch (err) {
+      console.error("Error blocking IP:", err);
+      setToast(`Failed to block IP ${ip}`);
+    }
   };
 
   const handleAnalyse = async (log) => {
-    const response = await fetch("http://localhost:8000/explain", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ log_message: log.log_message }),
-    });
-    const explanationData = await response.json();
+    try {
+      const response = await fetch(`${backendUrl}/explain`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ log_message: log.log_message }),
+      });
 
-    let action = "Monitor the log.";
+      const explanationData = await response.json();
 
-    switch (explanationData.detection) {
-      case "Unauthorized Access":
-        action = "Block IP immediately and investigate credentials.";
-        break;
-      case "Malware Detected":
-        action = "Isolate affected system and scan for malware.";
-        break;
-      case "Brute Force Attempt":
-        action = "Implement login rate limiting and check access logs.";
-        break;
-      case "Password Attack":
-        action = "Force password reset and monitor user activity.";
-        break;
-      case "Normal":
-      default:
-        action = "Monitor the log.";
+      let action = "Monitor the log.";
+      switch (explanationData.detection) {
+        case "Unauthorized Access":
+          action = "Block IP immediately and investigate credentials.";
+          break;
+        case "Malware Detected":
+          action = "Isolate affected system and scan for malware.";
+          break;
+        case "Brute Force Attempt":
+          action = "Implement login rate limiting and check access logs.";
+          break;
+        case "Password Attack":
+          action = "Force password reset and monitor user activity.";
+          break;
+        case "Normal":
+        default:
+          action = "Monitor the log.";
+      }
+
+      setModalData({
+        log: log.log_message,
+        explanation: explanationData.explanation,
+        severity: explanationData.detection,
+        action,
+      });
+      setIsModalOpen(true);
+      console.log("Received:", explanationData);
+    } catch (err) {
+      console.error("Error analysing log:", err);
     }
-
-    setModalData({
-    log: log.log_message,
-    explanation: explanationData.explanation,
-    severity: explanationData.detection,
-    action,
-    });
-    setIsModalOpen(true);
-    console.log("Received:", explanationData);
   };
 
   return (
