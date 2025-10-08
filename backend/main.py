@@ -60,10 +60,14 @@ model = None
 
 @app.on_event("startup")
 async def startup():
+    asyncio.create_task(background_startup())
+
+async def background_startup():
     global model
-    await create_logs_table()
-    asyncio.create_task(log_simulation_loop())
-    model = load_model()
+    await create_logs_table()          
+    model = load_model()               
+    asyncio.create_task(log_simulation_loop())  
+
 
 @app.get("/")
 async def root():
