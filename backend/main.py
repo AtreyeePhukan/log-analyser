@@ -69,8 +69,8 @@ async def startup():
 async def root():
     return {"status": "Backend is running"}
 
-frontend_build_dir = os.path.join(os.path.dirname(__file__), "../frontend/build")
-app.mount("/static", StaticFiles(directory=os.path.join(frontend_build_dir, "static")), name="static")
+frontend_build_dir = os.path.join(os.path.dirname(__file__), "../frontend/dist")
+app.mount("/", StaticFiles(directory=frontend_build_dir, html=True), name="frontend")
 
 @app.get("/{full_path:path}")
 async def serve_react_app(full_path: str):
