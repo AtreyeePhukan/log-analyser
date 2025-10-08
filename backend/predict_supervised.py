@@ -1,8 +1,7 @@
 import joblib
 from pathlib import Path
 
-MODEL_PATH = Path(__file__).parent / "models/supervised_tfidf_model_bundle.pkl"
-
+MODEL_PATH = Path(__file__).parent / "models" / "supervised_tfidf_model_bundle.pkl"
 model_bundle = joblib.load(MODEL_PATH)
 model = model_bundle["model"]
 vectorizer = model_bundle["vectorizer"]
