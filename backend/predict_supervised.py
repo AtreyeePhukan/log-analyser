@@ -1,8 +1,11 @@
 import joblib
+from pathlib import Path
 
-bundle = joblib.load("models/supervised_tfidf_model_bundle.pkl")
-model = bundle["model"]
-vectorizer = bundle["vectorizer"]
+MODEL_PATH = Path(__file__).parent / "models/supervised_tfidf_model_bundle.pkl"
+
+model_bundle = joblib.load(MODEL_PATH)
+model = model_bundle["model"]
+vectorizer = model_bundle["vectorizer"]
 
 def predict_log_vectorized(df):
     X_text = (
