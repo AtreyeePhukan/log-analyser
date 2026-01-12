@@ -138,11 +138,12 @@ npm install
 npm run dev
 ```
 9.2 Backend
+```bash
 pip install -r requirements.txt
 uvicorn main:app --reload
-
+```
 
 Author
-Atreyee Phukan
+-Atreyee Phukan
 
 
