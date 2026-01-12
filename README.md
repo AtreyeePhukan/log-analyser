@@ -58,7 +58,7 @@ Neon is used to provide a lightweight, cloud-hosted PostgreSQL database suitable
 
 ---
 
-4, Input Requirements
+4. Input Requirements
 
 The application requires a CSV file containing log data to initiate analysis.
 
@@ -143,7 +143,9 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-Author
--Atreyee Phukan
+---
+## Author
+Atreyee Phukan
+
 
 
