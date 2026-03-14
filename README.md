@@ -65,6 +65,7 @@ The application requires a CSV file containing log data to initiate analysis.
 A sample CSV file is provided in the repository for testing purposes:
 -sample_windows_logs.csv
 
+---
 
 5. How to Try the Application
 - Open the deployed frontend application.
@@ -102,7 +103,6 @@ The system is intentionally designed to work on user-provided logs to reflect re
 - `/ws/dashboard` – Streams live dashboard metrics.
 - `/ws/insights` – Streams generated security insights.
 
----
 
 6.3 Real-Time Log Simulation
 
